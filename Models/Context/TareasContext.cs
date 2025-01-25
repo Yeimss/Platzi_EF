@@ -26,7 +26,7 @@ public class TareasContext : DbContext
             tarea.Property(p => p.PrioridadTarea).IsRequired();
             tarea.Ignore(p => p.Resumen);
             tarea.HasOne(p => p.Categoria).WithMany(p => p.Tareas).HasForeignKey(p => p.CategoriaId);
-            tarea.Property(p => p.FechaCreacion).HasDefaultValue(DateTime.Now);
+            tarea.Property(p => p.FechaCreacion).HasDefaultValueSql("GETDATE()");
         });
     }
 }
