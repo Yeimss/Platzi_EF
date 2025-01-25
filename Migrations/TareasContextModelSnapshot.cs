@@ -38,9 +38,28 @@ namespace Platzi_EF.Migrations
                         .HasMaxLength(60)
                         .HasColumnType("nvarchar(60)");
 
+                    b.Property<int>("Peso")
+                        .HasColumnType("int");
+
                     b.HasKey("CategoriaId");
 
                     b.ToTable("Categoria", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            CategoriaId = new Guid("0ca42c9d-201e-42df-8587-0e7728d45fb7"),
+                            Descripcion = "Tareas pendientes",
+                            Nombre = "Actividades Pendientes",
+                            Peso = 20
+                        },
+                        new
+                        {
+                            CategoriaId = new Guid("0ca42c9d-201e-42df-8587-0e7728d45fb2"),
+                            Descripcion = "Ocio, relajo, chill, sornerito, todo eso",
+                            Nombre = "Actividades Personales",
+                            Peso = 50
+                        });
                 });
 
             modelBuilder.Entity("Platzi_EF.Models.Tarea", b =>
@@ -58,6 +77,11 @@ namespace Platzi_EF.Migrations
                         .HasColumnType("nvarchar(250)");
 
                     b.Property<DateTime>("FechaCreacion")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<DateTime>("FechaFin")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("PrioridadTarea")
@@ -73,6 +97,28 @@ namespace Platzi_EF.Migrations
                     b.HasIndex("CategoriaId");
 
                     b.ToTable("Tarea", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            TareaId = new Guid("9ebebc8f-41e2-46f5-a4b5-2e75e0390e6f"),
+                            CategoriaId = new Guid("0ca42c9d-201e-42df-8587-0e7728d45fb7"),
+                            Descripcion = "Agua, gas, alcantarillado, luz e internet",
+                            FechaCreacion = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FechaFin = new DateTime(2025, 1, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PrioridadTarea = 1,
+                            Titulo = "Pago de servicios"
+                        },
+                        new
+                        {
+                            TareaId = new Guid("99abb2e2-7e5c-4595-bb51-d4596551632c"),
+                            CategoriaId = new Guid("0ca42c9d-201e-42df-8587-0e7728d45fb2"),
+                            Descripcion = "Hay que terminar ese anime mi rey",
+                            FechaCreacion = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FechaFin = new DateTime(2025, 1, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PrioridadTarea = 0,
+                            Titulo = "Terminar Re-zero"
+                        });
                 });
 
             modelBuilder.Entity("Platzi_EF.Models.Tarea", b =>
