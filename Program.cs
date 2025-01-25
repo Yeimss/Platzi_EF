@@ -1,3 +1,4 @@
+using System.Xml.XPath;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -38,7 +39,7 @@ app.MapGet("/api/tareas/{titulo}", async ([FromServices] TareasContext dbContext
     });
 });
 
-app.MapPost("/api/tareas", async ([FromServices] TareasContext dbContext, Tarea tarea) => {
+app.MapPost("/api/tareas", async ([FromServices] TareasContext dbContext,[FromBody] Tarea tarea) => {
     tarea.TareaId = Guid.NewGuid();
 
     //await dbContext.AddAsync(tarea);
@@ -49,4 +50,27 @@ app.MapPost("/api/tareas", async ([FromServices] TareasContext dbContext, Tarea 
         estad = true
     });
 });
+app.MapPut("/api/tareas", async ([FromServices] TareasContext dbContext,[FromBody] Tarea tarea, [FromRoute] Guid id) => {
+
+    var tareaActual = dbContext.Tareas.Find(id);
+    if (tareaActual != null){
+        tareaActual.CategoriaId = tarea.CategoriaId;
+        tareaActual.Titulo = tarea.Titulo;
+        tareaActual.PrioridadTarea = tarea.PrioridadTarea;
+        tareaActual.Descripcion = tarea.Descripcion;
+        tareaActual.FechaFin = tarea.FechaFin;
+        await dbContext.SaveChangesAsync();
+        return Results.Ok(new {
+            mensaje = "Tarea agregada correctamente",
+            estad = true
+        });
+    }else{
+        return Results.NotFound(new {
+            mensaje = "Tarea no encontrada",
+            estado = false
+        });
+    }
+});
+
+
 app.Run();
