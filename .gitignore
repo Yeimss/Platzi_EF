@@ -1,0 +1,38 @@
+# Compiled binary files
+*.dll
+*.exe
+*.pdb
+
+# Build directories
+bin/
+obj/
+
+# User-specific files
+*.user
+*.rsuser
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Logs and debug files
+*.log
+*.vs/
+.vscode/
+
+# Dependency directories
+packages/
+.vs/
+
+# Entity Framework migration files
+*.designer.cs
+*.edmx.diagram
+*.edmx.sql
+Migrations/*.resx
+
+# Database files
+*.mdf
+*.ldf
+
+# Configuration files
+appsettings.*.json
+secrets.json
