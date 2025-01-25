@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Platzi_EF.Models;
 using Platzi_EF.Models.Context;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +22,7 @@ app.MapGet("/api/tareas", async ([FromServices] TareasContext dbContext) => {
     {
         mensaje = "Datos encontrados",
         estado = true, 
+        cantidadDatos =  dbContext.Tareas.Count(), 
         data = dbContext.Tareas
         .Include(p => p.Categoria)
         .ToList()
@@ -35,4 +38,15 @@ app.MapGet("/api/tareas/{titulo}", async ([FromServices] TareasContext dbContext
     });
 });
 
+app.MapPost("/api/tareas", async ([FromServices] TareasContext dbContext, Tarea tarea) => {
+    tarea.TareaId = Guid.NewGuid();
+
+    //await dbContext.AddAsync(tarea);
+    await dbContext.Tareas.AddAsync(tarea);
+    await dbContext.SaveChangesAsync();
+    return Results.Ok(new {
+        mensaje = "Tarea agregada correctamente",
+        estad = true
+    });
+});
 app.Run();
