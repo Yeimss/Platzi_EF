@@ -5,7 +5,7 @@ using Platzi_EF.Models.Context;
 var builder = WebApplication.CreateBuilder(args);
 
 //builder.Services.AddDbContext<TareasContext>(p => p.UseInMemoryDatabase("TareasDB"));
-builder.Services.AddSqlServer<TareasContext>("Data source=YEIMS;Initial Catalog=TareasDb;user id=sa;password=1234;TrustServerCertificate=True");
+builder.Services.AddSqlServer<TareasContext>(connectionString:  builder.Configuration.GetConnectionString("cnTareas"));
 var app = builder.Build();
 
 app.MapGet("/", () => "Hello World!");
