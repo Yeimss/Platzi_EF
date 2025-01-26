@@ -30,7 +30,7 @@ app.MapGet("/api/tareas", async ([FromServices] TareasContext dbContext) => {
     });
 });
 
-app.MapGet("/api/tareas/{titulo}", async ([FromServices] TareasContext dbContext, string titulo) => {
+app.MapGet("/api/tareas/{titulo}", async ([FromServices] TareasContext dbContext,[FromRoute] string titulo) => {
     return Results.Ok(new 
     {
         mensaje = "Datos encontrados",
@@ -50,7 +50,7 @@ app.MapPost("/api/tareas", async ([FromServices] TareasContext dbContext,[FromBo
         estad = true
     });
 });
-app.MapPut("/api/tareas", async ([FromServices] TareasContext dbContext,[FromBody] Tarea tarea, [FromRoute] Guid id) => {
+app.MapPut("/api/tareas/{id}", async ([FromServices] TareasContext dbContext,[FromBody] Tarea tarea, [FromRoute] Guid id) => {
 
     var tareaActual = dbContext.Tareas.Find(id);
     if (tareaActual != null){
@@ -61,7 +61,7 @@ app.MapPut("/api/tareas", async ([FromServices] TareasContext dbContext,[FromBod
         tareaActual.FechaFin = tarea.FechaFin;
         await dbContext.SaveChangesAsync();
         return Results.Ok(new {
-            mensaje = "Tarea agregada correctamente",
+            mensaje = "Tarea actualizada correctamente",
             estad = true
         });
     }else{
@@ -72,5 +72,20 @@ app.MapPut("/api/tareas", async ([FromServices] TareasContext dbContext,[FromBod
     }
 });
 
-
+app.MapDelete("/api/tareas/{id}", async ([FromServices] TareasContext dbContext, [FromRoute] Guid id) => {
+    var tareaActual = dbContext.Tareas.Find(id);
+    if (tareaActual != null){
+        dbContext.Remove(tareaActual);
+        await dbContext.SaveChangesAsync();
+        return Results.Ok(new {
+            mensaje = "Tarea eliminada correctamente",
+            estad = true
+        });
+    }else{
+        return Results.NotFound(new {
+            mensaje = "Tarea no encontrada",
+            estado = false
+        });
+    }
+});
 app.Run();
